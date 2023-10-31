@@ -1,11 +1,23 @@
+//Импорты
 const express = require('express');
+require('./db/db.js');
 
+// Роутеры
+const logsRouter = require('./routes/logs');
+
+
+// Начальная настройка
 const app = express();
 const port = process.env.PORT || 3000;
+app.use(express.json());
 
-app.use(express.json())
-// app.use(logsRouter)
+
+// Инициализация роутеров
+app.use(logsRouter);
 // app.use(weatherRouter)
+
+
+
 
 
 app.listen(port, () => {
