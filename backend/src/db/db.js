@@ -25,4 +25,3 @@ db.run(sql_create, (err) => {
 });
 
 module.exports = db;
-// EXAMPLES
