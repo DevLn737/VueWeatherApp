@@ -1,21 +1,23 @@
 <template>
-      <main>
-         <div class="search-box">
-            <input
-               type="text"
-               class="seacth-bar"
-               placeholder="Enter the city..."
-               v-model="enteredCity"
-            />
-         </div>
+   <the-header title="Weather app Vue+Node" subtitle="Weather app"></the-header>
 
-         <button type="button" @click="getWeather">Get weather</button>
-         {{ weather }}
-      </main>
+   <base-input
+      placeholder="Enter the city name"
+      v-model="enteredCity"
+      @clicked="getWeather(this.enteredCity)"
+   ></base-input>
+   
+   <weather-storage :weather="weather"></weather-storage>
+
+   <!-- <button @click="console.log(weather)">CHeck entered city</button> -->
 </template>
 
 <script>
+import TheHeader from './components/layouts/TheHeader.vue';
+import WeatherStorage from './components/weather/WeatherStorage.vue';
+
 export default {
+   components: { TheHeader, WeatherStorage },
    data() {
       return {
          enteredCity: '',
@@ -23,21 +25,35 @@ export default {
          isLoading: false,
       };
    },
+
    methods: {
       //WIP
-      async getWeather(city) {
-         try {
-            const response = await fetch(
-               `http://localhost:3000/v1/weather/${this.enteredCity}`
-            );
-            if (response.ok) {
-               this.weather = await response.json();
+
+      async getWeather() {
+         const city = this.enteredCity;
+
+         if (city === '') {
+            return console.log('City is empty');
+         } else {
+            try {
+               const response = await fetch(
+                  `http://localhost:3000/v1/weather/${city}`
+               );
+               if (response.ok) {
+                  this.weather = await response.json();
+               }
+               console.log(this.weather);
+            } catch (error) {
+               console.log(error);
             }
-         } catch (error) {
-            console.log(error);
          }
       },
    },
+
+   provide() {
+      return { weather: this.weather };
+   },
+
    // mounted() {
    //    this.getWeather();
    // },
@@ -54,6 +70,7 @@ html {
 body {
    padding: 0;
    margin: 0;
+   background-color: #1f1f1f;
 }
 ul {
    list-style: none;
