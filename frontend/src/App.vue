@@ -6,10 +6,8 @@
       v-model="enteredCity"
       @clicked="getWeather(this.enteredCity)"
    ></base-input>
-   
-   <weather-storage :weather="weather"></weather-storage>
 
-   <!-- <button @click="console.log(weather)">CHeck entered city</button> -->
+   <weather-storage :weather="weather"></weather-storage>
 </template>
 
 <script>
@@ -39,14 +37,28 @@ export default {
                const response = await fetch(
                   `http://localhost:3000/v1/weather/${city}`
                );
+
                if (response.ok) {
-                  this.weather = await response.json();
+                  const content = await response.json();
+                  this.weather = content
+                  this.logToDB(content)
                }
-               console.log(this.weather);
+
             } catch (error) {
                console.log(error);
             }
          }
+      },
+      logToDB(data) {
+         // Расширить логи в будущем
+         const dataToSend = {place: data.city, temp: data.temp}
+         fetch('http://localhost:3000/v1/logs', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json; charset=utf-8',
+            },
+            body:JSON.stringify(dataToSend),
+         });
       },
    },
 
